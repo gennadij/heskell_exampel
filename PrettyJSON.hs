@@ -3,6 +3,9 @@ module PrettyJSON where
 import SimpleJSON
 import PrettyStub
 import Prelude hiding ((<>))
+import Numeric (showHex)
+import Data.Bits (shiftR, (.&.))
+import Data.Char (ord)
 
 renderJValue :: JValue -> Doc
 renderJValue (JBool True)  = text "true"
@@ -43,3 +46,8 @@ hexEscape :: Char -> Doc
 hexEscape c | d < 0x10000 = smallHex d
             | otherwise   = astral (d - 0x10000)
   where d = ord c
+
+series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
+series open close item = enclose open close 
+                       . fsep . punctuate (char ',') . map item
+ 
