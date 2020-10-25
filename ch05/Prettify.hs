@@ -65,7 +65,7 @@ compact x = transform [x]
             Line         -> '\n' : transform ds
             a `Concat` b -> transform (a:b:ds)
             _ `Union` b  -> transform (b:ds)
-            
+
 pretty :: Int -> Doc -> String
 pretty width x = best 0 [x] 
   where best col (d:ds) = 
@@ -79,7 +79,7 @@ pretty width x = best 0 [x]
                                          (best col (b:ds))
         best _ _ = ""
 
-        nicest col a b | (width - least) `fits` a = b
+        nicest col a b | (width - least) `fits` a = a
                        | otherwise              = b
                        where least = min width col
 
