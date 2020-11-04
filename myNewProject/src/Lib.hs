@@ -1,6 +1,8 @@
 module Lib
     (calcExactRoot) where
 
+data Root = Root Int Int deriving (Eq, Show)
+
 calcExactRoot :: Int -> Int
 calcExactRoot radicand = radicand
 
@@ -20,12 +22,29 @@ calcStandartRoots radicand (x:y:xs)
     where summe = x + y
 -- suche den radicand in der Liste Standardswurzeln
 
-simpleSerchInStandartRoots :: Int -> [Int] -> [Int]
+appendResultOnStandartRoots :: [Int] -> [Int] -> [Root]
+appendResultOnStandartRoots [] _ = []
+appendResultOnStandartRoots _ [] = []
+appendResultOnStandartRoots (x:xs) (y:ys) = Root x y : appendResultOnStandartRoots xs ys
+
+giveRoots :: Int -> [Root]
+giveRoots radicand = appendResultOnStandartRoots [2 .. radicand] (calcStandartRoots radicand (calcOdd radicand))
+
+simpleSerchInStandartRoots :: Int -> [Root] -> [Root]
 simpleSerchInStandartRoots radicand [] = []
-simpleSerchInStandartRoots radicand xs = filter (\x -> radicand == x) xs 
+simpleSerchInStandartRoots radicand xs = filter (\(Root a b) -> radicand == b) xs
 
-test1 :: Int -> [Int]
-test1 radicand = calcStandartRoots radicand (calcOdd radicand)
-test2 :: Int -> [Int]
-test2 radicand = simpleSerchInStandartRoots radicand (calcStandartRoots radicand (calcOdd radicand))
+complexSerchOfExactResult :: Int -> [Root] -> (Int, Int)
+complexSerchOfExactResult radicand (x:xs) 
+                            | (snd resFromQout) == 0 = complexSerchOfExactResult radicand xs
+                            | (snd resFromQout) > 0  = (0,0)
+                            where resFromQout = quotRem radicand (root x)
+                                                where root :: Root -> Int
+                                                      root (Root _ b) = b
 
+test4 radicand
+                | result == [] = [] -- versuche den wurzel restlos mit jedem standart Wurzel zu teilen
+                | otherwise = result
+                where result = simpleSerchInStandartRoots radicand (giveRoots radicand)
+
+test3 radicand = simpleSerchInStandartRoots radicand (giveRoots radicand)
