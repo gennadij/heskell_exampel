@@ -3,6 +3,12 @@ module Lib
 
 data Root = Root Int Int deriving (Eq, Show)
 
+getFirst :: Root -> Int
+getFirst (Root a b) = a
+
+getSecond :: Root -> Int
+getSecond (Root a b) = b 
+
 calcExactRoot :: Int -> Int
 calcExactRoot radicand = radicand
 
@@ -34,17 +40,21 @@ simpleSerchInStandartRoots :: Int -> [Root] -> [Root]
 simpleSerchInStandartRoots radicand [] = []
 simpleSerchInStandartRoots radicand xs = filter (\(Root a b) -> radicand == b) xs
 
-complexSerchOfExactResult :: Int -> [Root] -> (Int, Int)
+complexSerchOfExactResult :: Int -> [Root] -> [Root]
+complexSerchOfExactResult radicand [] = [Root 0 radicand] 
 complexSerchOfExactResult radicand (x:xs) 
-                            | (snd resFromQout) == 0 = complexSerchOfExactResult radicand xs
-                            | (snd resFromQout) > 0  = (0,0)
+                            | (snd resFromQout) == 0 = [x, Root (fst resFromQout) (snd resFromQout)]
+                            | (snd resFromQout) > 0  = complexSerchOfExactResult radicand xs
+                            | otherwise              = [x] 
                             where resFromQout = quotRem radicand (root x)
                                                 where root :: Root -> Int
                                                       root (Root _ b) = b
 
-test4 radicand
-                | result == [] = [] -- versuche den wurzel restlos mit jedem standart Wurzel zu teilen
-                | otherwise = result
-                where result = simpleSerchInStandartRoots radicand (giveRoots radicand)
+showResult :: Int -> [Root] -> IO ()
+showResult radicand [x] = putStrLn ("Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ ".")
+showResult radicand [x,y] = putStrLn ("Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ "*sqrt(" ++ show (getFirst y) ++ ").")
 
-test3 radicand = simpleSerchInStandartRoots radicand (giveRoots radicand)
+test4 radicand
+                | result == [] = showResult radicand (complexSerchOfExactResult radicand (giveRoots radicand)) -- versuche den wurzel restlos mit jedem standart Wurzel zu teilen
+                | otherwise = showResult radicand (result)
+                where result = simpleSerchInStandartRoots radicand (giveRoots radicand)
