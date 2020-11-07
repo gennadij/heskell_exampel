@@ -9,10 +9,6 @@ getFirst (Root a b) = a
 getSecond :: Root -> Int
 getSecond (Root a b) = b 
 
-calcExactRoot :: Int -> Int
-calcExactRoot radicand = radicand
-
-
 -- beispiel 50 
 -- berchne Ungerade Zahlen
 calcOdd :: Int -> [Int]
@@ -50,9 +46,15 @@ complexSerchOfExactResult radicand (x:xs)
                                                 where root :: Root -> Int
                                                       root (Root _ b) = b
 
-showResult :: Int -> [Root] -> IO ()
-showResult radicand [x] = putStrLn ("Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ ".")
-showResult radicand [x,y] = putStrLn ("Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ "*sqrt(" ++ show (getFirst y) ++ ").")
+showResult :: Int -> [Root] -> String
+showResult radicand [x] = "Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ "."
+showResult radicand [x,y] = "Ergebnis von sqrt(" ++ show radicand ++ ") ist " ++ show (getFirst x) ++ "*sqrt(" ++ show (getFirst y) ++ ")."
+
+calcExactRoot :: Int -> String
+calcExactRoot radicand
+                | result == [] = showResult radicand (complexSerchOfExactResult radicand (giveRoots radicand)) -- versuche den wurzel restlos mit jedem standart Wurzel zu teilen
+                | otherwise = showResult radicand (result)
+                where result = simpleSerchInStandartRoots radicand (giveRoots radicand)
 
 test4 radicand
                 | result == [] = showResult radicand (complexSerchOfExactResult radicand (giveRoots radicand)) -- versuche den wurzel restlos mit jedem standart Wurzel zu teilen
