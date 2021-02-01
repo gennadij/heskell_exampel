@@ -36,10 +36,6 @@ giveRoots :: Int -> [Root]
 giveRoots radicand = appendResultOnStandartRoots [2 .. radicand] (calcStandartRoots radicand)
 
 -- beispiel 50 
--- berchne Ungerade Zahlen
-calcOdd :: Int -> [Int]
-calcOdd 0 = []
-calcOdd x = filter odd [1 .. x]
 
 -- berechne alle moegliche Wurzeln bis zu radicand
 -- radicand -> Liste ungerade Zahlen -> Liste mit Wurzeln
@@ -48,8 +44,10 @@ calcOdd x = filter odd [1 .. x]
 -- 9 + 7 = [4,9,16]
 
 calcStandartRoots :: Int  -> [Int]
-calcStandartRoots radicand = calc radicand (calcOdd radicand)
-    where calc :: Int -> [Int] -> [Int]
+calcStandartRoots radicand = calc radicand listOfOddNumbers
+    where listOfOddNumbers :: [Int] -- berchne Ungerade Zahlen
+          listOfOddNumbers = filter odd [1 .. radicand]
+          calc :: Int -> [Int] -> [Int] 
           calc radicand (x:y:xs)
             | summe <= radicand = summe : calc radicand (summe : xs)
             | otherwise         = []
