@@ -25,3 +25,13 @@ instance Show TrafficLight where
   show Red    = "Rotes Licht"
   show Green  = "Grünes Licht"
   show Yellow = "Gelbes Licht"
+
+-- data ZipList a = ZipList [a] 
+data ZipList a = ZipList { getZipList :: [a] } 
+data Profession = Fighter | Archer | Accountant 
+newtype CharList = CharList { getCharList :: [Char] } deriving (Eq, Show)
+
+newtype Pair b a = Pair { getPair :: (a,b) } deriving (Show)
+instance Functor (Pair c) where  
+  fmap f (Pair (x, y)) = Pair (f x, y)
+  fmap2 f 
