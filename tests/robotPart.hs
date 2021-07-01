@@ -48,7 +48,7 @@ partsDB = Map.fromList keyVals
         vals = [leftArm,rightArm,robotHead]
         keyVals = zip keys vals
 
-insertSnippet :: Maybe Html -> IO ()
+-- insertSnippet :: Maybe Html -> IO ()
 
 partVal :: Maybe RobotPart
 partVal = Map.lookup 1 partsDB
@@ -58,3 +58,9 @@ partHtml = renderHtml <$> partVal
 
 allParts :: [RobotPart]
 allParts = map snd (Map.toList partsDB)
+
+allPartsHtml :: [Html]
+allPartsHtml = renderHtml <$> allParts
+
+htmlPartsDB :: Map.Map Int Html
+htmlPartsDB = renderHtml <$> partsDB
