@@ -2,6 +2,7 @@
 import qualified Data.Map as Map
 
 type LatLong = (Double,Double)
+
 locationDB :: Map.Map String LatLong
 locationDB = Map.fromList [("Arkham",(42.6054,-70.7829))
                           ,("Innsmouth",(42.8250,-70.8150))
@@ -24,3 +25,7 @@ haversine coords1 coords2 = earthRadius * c
         a = (sin (dlat/2))^2 + cos rlat1 * cos rlat2 * (sin (dlong/2))^2
         c = 2 * atan2 (sqrt a) (sqrt (1-a))
         earthRadius = 3961.0
+
+printDistance :: Maybe Double -> IO ()
+printDistance Nothing = putStrLn "Error, invalid city entered"
+printDistance (Just distance) = putStrLn (show distance ++ " miles")
